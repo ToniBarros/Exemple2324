@@ -1,54 +1,56 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Script_Moneda : MonoBehaviour
 {
-    public float velocidad;
-    public Collider col_moneda;
-    public Collider col_player;
+    private int velocidad = 6;
     private int direccion;
+    private static int monedasTocadas = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        velocidad = 150;
-
-        //Obtenemos el collider de la moneda
-        col_moneda = GetComponent<Collider>();
-
- InvokeRepeating("Movimiento", 0, 2);
+        InvokeRepeating("Movimiento", 0, 2);
+        Destroy(gameObject, 6f);
     }
+
     // Update is called once per frame
     void Update()
     {
-
+        // Actualiza el marcador de monedas tocadas
+        Debug.Log("Monedas tocadas: " + monedasTocadas);
     }
 
-//Funcion movimiento
-public void Movimiento()
-{
-    //Movimiento aleatorio
-    direccion = Random.Range(0, 2);
-    switch (direccion)
+    //Funcion movimiento
+    public void Movimiento()
     {
-        case 0:
-            transform.Translate(Vector3.right * velocidad * Time.deltaTime);
-            break;
-        case 1:
-            transform.Translate(Vector3.left * velocidad * Time.deltaTime);
-            break;
+        //Movimiento aleatorio
+        direccion = Random.Range(0, 4);
+        Vector3 movimiento = Vector3.zero;
+        switch (direccion)
+        {
+            case 0:
+                movimiento = (Vector3.right + Vector3.up).normalized * velocidad * Time.deltaTime;
+                break;
+            case 1:
+                movimiento = (Vector3.right + Vector3.down).normalized * velocidad * Time.deltaTime;
+                break;
+            case 2:
+                movimiento = (Vector3.left + Vector3.down).normalized * velocidad * Time.deltaTime;
+                break;
+            case 3:
+                movimiento = (Vector3.left + Vector3.up).normalized * velocidad * Time.deltaTime;
+                break;
+        }
+        transform.position += movimiento;
     }
-}
 
-    // Funcion uncollider
-private void OnCollisionEnter(Collision collision)
-{
-    if (collision.gameObject.tag.Equals("Player"))
+    // Funcion untrigger
+    private void OnTriggerEnter(Collider otñher)
     {
-        Destroy(gameObject);
-    } 
- 
- Destroy(gameObject, 6f);
-}
+        if (other.gameObject.tag.Equals("Player"))
+        {
+            Destroy(gameObject);
+            monedasTocadas++;
+        }
+    }
 }
