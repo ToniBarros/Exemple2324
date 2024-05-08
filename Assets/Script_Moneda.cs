@@ -5,32 +5,31 @@ using UnityEngine;
 public class Script_Moneda : MonoBehaviour
 {
     public float velocidad;
-    private Collider col_moneda;
-    private Collider col_player;
+    public Collider col_moneda;
+    public Collider col_player;
+    private int direccion;
 
     // Start is called before the first frame update
     void Start()
     {
-        velocidad = 5;
+        velocidad = 150;
 
         //Obtenemos el collider de la moneda
         col_moneda = GetComponent<Collider>();
 
+ InvokeRepeating("Movimiento", 0, 2);
     }
     // Update is called once per frame
     void Update()
     {
 
-        //Llamamos a la funcion movimiento
-        InvokeRepeating("Movimiento", 0, 2);
-        
     }
 
 //Funcion movimiento
 public void Movimiento()
 {
     //Movimiento aleatorio
-    int direccion = Random.Range(0, 2);
+    direccion = Random.Range(0, 2);
     switch (direccion)
     {
         case 0:
@@ -43,13 +42,13 @@ public void Movimiento()
 }
 
     // Funcion uncollider
-    private void OnCollisionEnter(Collision collision)
+private void OnCollisionEnter(Collision collision)
+{
+    if (collision.gameObject.tag.Equals("Player"))
     {
-        if (collision.gameObject.tag == "Player")
-        {
-            Destroy(gameObject);
-        } else {
-            Destroy(gameObject, 6f);
-        }
-    }
+        Destroy(gameObject);
+    } 
+ 
+ Destroy(gameObject, 6f);
+}
 }
